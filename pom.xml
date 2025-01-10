@@ -80,6 +80,7 @@
     <!-- maven-javadoc-plugin properties -->
     <bottom><![CDATA[Copyright &copy; ${project.inceptionYear}&ndash;{currentYear}, <a href="${project.organization.url}" target="_top">${project.organization.name}</a>. All rights reserved.]]></bottom>
     <doctitle>&lt;a href="${project.url}" target="_top"&gt;&lt;span style="font-family:Lobster, cursive;"&gt;µb&lt;/span&gt; ${project.artifactId}&lt;/a&gt; ${project.version}</doctitle>
+    <links>https://microbean.github.io/microbean-assign/apidocs/,https://microbean.github.io/microbean-construct/apidocs/,https://microbean.github.io/microbean-qualifier/apidocs/</links>
     <sourcetab>2</sourcetab>
 
     <!-- maven-release-plugin properties -->
@@ -134,9 +135,9 @@
       <dependency>
         <groupId>org.microbean</groupId>
         <artifactId>microbean-assign</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
       </dependency>
-      
+
       <dependency>
         <groupId>org.microbean</groupId>
         <artifactId>microbean-construct</artifactId>

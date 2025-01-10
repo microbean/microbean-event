@@ -32,12 +32,65 @@ import org.microbean.assign.AbstractTypeMatcher;
 
 import org.microbean.construct.Domain;
 
+/**
+ * An {@link AbstractTypeMatcher} encapsulating <a
+ * href="https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#observer_resolution">CDI-compatible event type
+ * matching rules</a>.
+ *
+ * @author <a href="https://about.me/lairdnelson/" target="_top">Laird Nelson</a>
+ *
+ * @see #test(TypeMirror, TypeMirror)
+ */
 public final class EventTypeMatcher extends AbstractTypeMatcher {
 
+
+  /*
+   * Constructors.
+   */
+
+
+  /**
+   * Creates a new {@link EventTypeMatcher}.
+   *
+   * @param domain a {@link Domain}; must not be {@code null}
+   *
+   * @exception NullPointerException if {@code domain} is {@code null}
+   *
+   * @see Domain
+   */
   public EventTypeMatcher(final Domain domain) {
     super(domain);
   }
 
+
+  /*
+   * Instance methods.
+   */
+
+
+  /**
+   * Returns {@code true} if and only if the supplied {@code payload} argument (normally an <dfn>event type</dfn>) <a
+   * href="https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#observer_resolution"><em>matches</em></a> the
+   * supplied {@code receiver} argument (normally an <dfn>observed event type</dfn>), according to the rules defined by
+   * <a href="https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#observer_resolution">section 2.8.3 of the
+   * CDI specification</a>.
+   *
+   * @param receiver the left hand side of an event type assignment (normally an observed event type); must not be
+   * {@code null}
+   *
+   * @param payload the right hand side of an event type assignment (normally an event type); must not be {@code null}
+   *
+   * @return {@code true} if and only if the supplied {@code payload} argument <a
+   * href="https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#observer_resolution">matches</a> the supplied
+   * {@code receiver} argument, according to the rules defined by <a
+   * href="https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#observer_resolution">section 2.8.3 of the CDI
+   * specification</a>; {@code false} otherwise
+   *
+   * @exception NullPointerException if either argument is {@code null}
+   *
+   * @exception IllegalArgumentException if either type is any type other than an {@linkplain TypeKind#ARRAY array
+   * type}, a {@link TypeKind#isPrimitive() primitive type}, or a {@linkplain TypeKind#DECLARED declared type}
+   */
   @Override // Matcher<TypeMirror, TypeMirror>
   public final boolean test(final TypeMirror receiver, final TypeMirror payload) {
     // https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#observer_resolution
@@ -229,6 +282,12 @@ public final class EventTypeMatcher extends AbstractTypeMatcher {
 
     }; // end switch(payload)
   }
+
+
+  /*
+   * Static methods.
+   */
+
 
   // Returns a new IllegalArgumentException describing an illegal payload type.
   private static IllegalArgumentException illegalPayload(final TypeMirror payload) {

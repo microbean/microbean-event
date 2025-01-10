@@ -34,7 +34,15 @@ import org.microbean.construct.Domain;
 
 import static java.lang.System.Logger.Level.WARNING;
 
-// Experimental and basically located in the wrong package and module.
+/**
+ * A utility for working with <dfn>event types</dfn>.
+ *
+ * @author <a href="https://about.me/lairdnelson" target="_top">Laird Nelson</a>
+ *
+ * @see #eventTypes(TypeMirror)
+ *
+ * @see #legalEventType(TypeMirror)
+ */
 public final class EventTypes extends Types {
 
 
@@ -51,6 +59,13 @@ public final class EventTypes extends Types {
    */
 
 
+  /**
+   * Creates a new {@link EventTypes}.
+   *
+   * @param domain a {@link Domain}; must not be {@code null}
+   *
+   * @exception NullPointerException if {@code domain} is {@code null}
+   */
   public EventTypes(final Domain domain) {
     super(domain);
   }
@@ -61,6 +76,25 @@ public final class EventTypes extends Types {
    */
 
 
+  /**
+   * Returns an immutable {@link List} of {@linkplain #legalEventType(TypeMirror) legal event types} that the supplied
+   * {@link TypeMirror} bears.
+   *
+   * <p>The returned {@link List} may be empty.</p>
+   *
+   * @param t a {@link TypeMirror}; must not be {@code null}
+   *
+   * @return an immutable {@link List} of {@linkplain #legalEventType(TypeMirror) legal event types} that the supplied
+   * {@link TypeMirror} bears; never {@code null}
+   *
+   * @exception NullPointerException if {@code t} is {@code null}
+   *
+   * @microbean.nullability This method never returns {@code null}.
+   *
+   * @microbean.idempotency This method is idempotent and returns determinate values.
+   *
+   * @microbean.threadsafety This method is safe for concurrent use by multiple threads.
+   */
   public final List<? extends TypeMirror> eventTypes(final TypeMirror t) {
     // https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#event_types_and_qualifier_types
     if (t.getKind() == TypeKind.DECLARED) {
@@ -84,6 +118,32 @@ public final class EventTypes extends Types {
    */
 
 
+  /**
+   * Returns {@code true} if and only if the supplied {@link TypeMirror} is a <dfn>legal event type</dfn>.
+   *
+   * <p>Legal event types are, exactly:</p>
+   *
+   * <ol>
+   *
+   * <li>{@linkplain TypeKind#ARRAY Array} types whose {@linkplain ArrayType#getComponentType() component type}s are
+   * legal event types</li>
+   *
+   * <li>{@linkplain TypeKind#DECLARED Declared} types that contain no {@linkplain TypeKind#WILDCARD wildcard type}s for
+   * every level of containment</li>
+   *
+   * </ol>
+   *
+   * @param t a {@link TypeMirror}; must not be {@code null}
+   *
+   * @return {@code true} if and only if {@code t} is a legal bean type; {@code false} otherwise
+   *
+   * @exception NullPointerException if {@code t} is {@code null}
+   *
+   * @microbean.idempotency This method is idempotent and deterministic.
+   *
+   * @microbean.threadsafety This method itself is safe for concurrent use by multiple threads, but {@link TypeMirror}
+   * implementations and {@link Domain} implementations may not be safe for such use.
+   */
   public static final boolean legalEventType(final TypeMirror t) {
     // https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#event_types_and_qualifier_types
     return switch (t.getKind()) {
@@ -128,6 +188,24 @@ public final class EventTypes extends Types {
 
   }
 
+  /**
+   * Returns {@code true} if and only if the supplied {@link TypeMirror} is a <dfn>legal observed event type</dfn>.
+   *
+   * <p>A legal observed event type is <a
+   * href="https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#event_types_and_qualifier_types">any Java type
+   * that a method parameter may bear</a>.
+   *
+   * @param t a {@link TypeMirror}; must not be {@code null}
+   *
+   * @return {@code true} if and only if {@code t} is a legal observed event type; {@code false} otherwise
+   *
+   * @exception NullPointerException if {@code t} is {@code null}
+   *
+   * @microbean.idempotency This method is idempotent and deterministic.
+   *
+   * @microbean.threadsafety This method itself is safe for concurrent use by multiple threads, but {@link TypeMirror}
+   * implementations and {@link Domain} implementations may not be safe for such use.
+   */
   public static final boolean legalObservedEventType(final TypeMirror t) {
     // https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#event_types_and_qualifier_types
     // "Any Java type [that a method parameter element may bear] may be an observed event type."
@@ -136,6 +214,5 @@ public final class EventTypes extends Types {
     default -> false;
     };
   }
-
 
 }
