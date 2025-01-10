@@ -24,12 +24,56 @@ import static org.microbean.assign.Qualifiers.defaultQualifier;
 import static org.microbean.assign.Qualifiers.defaultQualifiers;
 import static org.microbean.assign.Qualifiers.qualifiers;
 
-public final class EventQualifiersMatcher implements Matcher<Collection<? extends NamedAttributeMap<?>>, Collection<? extends NamedAttributeMap<?>>> {
+/**
+ * A {@link Matcher} encapsulating <a
+ * href="https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#observer_resolution">CDI-compatible event
+ * qualifier matching rules</a>.
+ *
+ * @author <a href="https://about.me/lairdnelson/" target="_top">Laird Nelson</a>
+ *
+ * @see #test(Collection, Collection)
+ */
+public final class EventQualifiersMatcher
+  implements Matcher<Collection<? extends NamedAttributeMap<?>>, Collection<? extends NamedAttributeMap<?>>> {
 
+
+  /*
+   * Constructors.
+   */
+
+
+  /**
+   * Creates a new {@link EventQualifiersMatcher}.
+   */
   public EventQualifiersMatcher() {
     super();
   }
 
+
+  /*
+   * Instance methods.
+   */
+
+
+  /**
+   * Returns {@code true} if and only if either the {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection)
+   * qualifiers present} in {@code receiverAttributes} are {@linkplain Collection#isEmpty() empty}, or if the collection
+   * of {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code
+   * payloadAttributes} {@linkplain Collection#containsAll(Collection) contains all} of the {@linkplain
+   * org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code receiverAttributes}.
+   *
+   * @param receiverAttributes a {@link Collection} of {@link NamedAttributeMap}s; must not be {@code null}
+   *
+   * @param payloadAttributes a {@link Collection} of {@link NamedAttributeMap}s; must not be {@code null}
+   *
+   * @return {@code true} if and only if either the {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection)
+   * qualifiers present} in {@code receiverAttributes} are {@linkplain Collection#isEmpty() empty}, or if the collection
+   * of {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code
+   * payloadAttributes} {@linkplain Collection#containsAll(Collection) contains all} of the {@linkplain
+   * org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code receiverAttributes}
+   *
+   * @exception NullPointerException if either argument is {@code null}
+   */
   @Override // Matcher<Collection<? extends NamedAttributeMap<?>>, Collection<? extends NamedAttributeMap<?>>>
   public final boolean test(final Collection<? extends NamedAttributeMap<?>> receiverAttributes,
                             final Collection<? extends NamedAttributeMap<?>> payloadAttributes) {
