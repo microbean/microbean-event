@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"org.microbean.event","l":"EventQualifiersMatcher"},{"p":"org.microbean.event","l":"EventTypeMatcher"},{"p":"org.microbean.event","l":"EventTypes"}];updateSearchResults();
