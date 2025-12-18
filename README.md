@@ -19,15 +19,15 @@ microBean™ Event requires a Java runtime of version 23 or higher.
 
 # Installation
 
-microBean™ Event is available on [Maven Central](https://search.maven.org/).  Include microBean™ Event as a Maven
+microBean™ Event is available on [Maven Central](https://search.maven.org/). Include microBean™ Event as a Maven
 dependency:
 
 ```xml
 <dependency>
   <groupId>org.microbean</groupId>
   <artifactId>microbean-event</artifactId>
-  <!-- Always check https://search.maven.org/artifact/org.microbean/microbean-bean for up-to-date available versions. -->
-  <version>0.0.1</version>
+  <!-- Always check https://search.maven.org/artifact/org.microbean/microbean-event for up-to-date available versions. -->
+  <version>0.0.2</version>
 </dependency>
 ```
 

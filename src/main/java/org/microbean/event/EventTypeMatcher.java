@@ -98,7 +98,7 @@ public final class EventTypeMatcher extends AbstractTypeMatcher {
       // Interestingly array types are never discussed explicitly in the specification's sections on observer
       // resolution, but clearly they must be possible.
       case ARRAY                                                -> switch (payload.getKind()) {
-        case ARRAY    -> this.identical(this.domain().elementType(receiver), this.domain().elementType(payload)); // never spelled out in the spec but inferred
+      case ARRAY    -> this.test(((ArrayType)receiver).getComponentType(), ((ArrayType)payload).getComponentType()); // never spelled out in the spec but inferred
         case DECLARED -> false;
         default       -> throw illegalPayload(payload);
       };
@@ -262,7 +262,7 @@ public final class EventTypeMatcher extends AbstractTypeMatcher {
       }; // end switch(receiver); end parameterizedPayload case
 
       case DeclaredType nonGenericOrRawPayload -> switch (receiver) {
-        // "A [non-generic or] raw event type [nonGenericOrRawayload] is considered assignable..."
+        // "A [non-generic or] raw event type [nonGenericOrRawPayload] is considered assignable..."
 
         case DeclaredType parameterizedReceiver when this.domain().parameterized(receiver) -> {
           // "...to a parameterized observed event type [parameterizedReceiver] if the[ir] [non-generic classes or] raw
