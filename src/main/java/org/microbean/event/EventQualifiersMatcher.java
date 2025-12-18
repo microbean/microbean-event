@@ -17,11 +17,9 @@ import java.util.Collection;
 
 import org.microbean.assign.Matcher;
 
-import org.microbean.qualifier.NamedAttributeMap;
+import org.microbean.attributes.Attributes;
 
 import static org.microbean.assign.Qualifiers.anyQualifier;
-import static org.microbean.assign.Qualifiers.defaultQualifier;
-import static org.microbean.assign.Qualifiers.defaultQualifiers;
 import static org.microbean.assign.Qualifiers.qualifiers;
 
 /**
@@ -33,8 +31,7 @@ import static org.microbean.assign.Qualifiers.qualifiers;
  *
  * @see #test(Collection, Collection)
  */
-public final class EventQualifiersMatcher
-  implements Matcher<Collection<? extends NamedAttributeMap<?>>, Collection<? extends NamedAttributeMap<?>>> {
+public final class EventQualifiersMatcher implements Matcher<Collection<? extends Attributes>, Collection<? extends Attributes>> {
 
 
   /*
@@ -62,9 +59,9 @@ public final class EventQualifiersMatcher
    * payloadAttributes} {@linkplain Collection#containsAll(Collection) contains all} of the {@linkplain
    * org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code receiverAttributes}.
    *
-   * @param receiverAttributes a {@link Collection} of {@link NamedAttributeMap}s; must not be {@code null}
+   * @param receiverAttributes a {@link Collection} of {@link Attributes} instances; must not be {@code null}
    *
-   * @param payloadAttributes a {@link Collection} of {@link NamedAttributeMap}s; must not be {@code null}
+   * @param payloadAttributes a {@link Collection} of {@link Attributes} instances; must not be {@code null}
    *
    * @return {@code true} if and only if either the {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection)
    * qualifiers present} in {@code receiverAttributes} are {@linkplain Collection#isEmpty() empty}, or if the collection
@@ -75,11 +72,11 @@ public final class EventQualifiersMatcher
    * @exception NullPointerException if either argument is {@code null}
    */
   @Override // Matcher<Collection<? extends NamedAttributeMap<?>>, Collection<? extends NamedAttributeMap<?>>>
-  public final boolean test(final Collection<? extends NamedAttributeMap<?>> receiverAttributes,
-                            final Collection<? extends NamedAttributeMap<?>> payloadAttributes) {
+  public final boolean test(final Collection<? extends Attributes> receiverAttributes,
+                            final Collection<? extends Attributes> payloadAttributes) {
     // "An event is delivered to an observer method if...the observer method has no event qualifiers or has a subset of
     // the event qualifiers."
-    final Collection<? extends NamedAttributeMap<?>> receiverQualifiers = qualifiers(receiverAttributes);
+    final Collection<? extends Attributes> receiverQualifiers = qualifiers(receiverAttributes);
     return receiverQualifiers.isEmpty() || qualifiers(payloadAttributes).containsAll(receiverQualifiers);
   }
 

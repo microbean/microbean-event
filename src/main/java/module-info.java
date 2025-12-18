@@ -23,7 +23,9 @@ module org.microbean.event {
   
   requires transitive java.compiler;
   requires transitive org.microbean.assign;
+  requires transitive org.microbean.attributes;
+  requires transitive org.microbean.bean;
+  requires org.microbean.constant;
   requires transitive org.microbean.construct;
-  requires transitive org.microbean.qualifier;
 
 }
