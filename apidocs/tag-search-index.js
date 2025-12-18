@@ -1,1 +1,1 @@
-tagSearchIndex = [];updateSearchResults();
+tagSearchIndex = [{"l":"event type argument inference","h":"org.microbean.event.EventTypes.eventTypes(TypeMirror, Object)","u":"org.microbean.event/org/microbean/event/EventTypes.html#eventtypeargumentinference"},{"l":"Search Tags","h":"","k":"18","u":"search-tags.html"}];updateSearchResults();
