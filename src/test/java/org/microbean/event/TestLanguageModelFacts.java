@@ -16,11 +16,13 @@ package org.microbean.event;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 
@@ -41,14 +43,14 @@ import static javax.lang.model.element.ElementKind.ANNOTATION_TYPE;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.ElementKind.METHOD;
 
+import static javax.lang.model.element.Modifier.ABSTRACT;
+import static javax.lang.model.element.Modifier.PUBLIC;
+
 import static javax.lang.model.type.TypeKind.DECLARED;
-import static javax.lang.model.type.TypeKind.TYPEVAR;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -73,12 +75,19 @@ final class TestLanguageModelFacts {
     final ExecutableElement element = m.keySet().iterator().next();
     final TypeElement deprecatedElement = (TypeElement)element.getEnclosingElement();
     assertSame(ANNOTATION_TYPE, deprecatedElement.getKind());
+    Set<Modifier> modifiers = deprecatedElement.getModifiers();
+    assertEquals(2, modifiers.size());
+    assertTrue(modifiers.contains(PUBLIC));
+    assertTrue(modifiers.contains(ABSTRACT));
     final List<? extends Element> enclosedElements = deprecatedElement.getEnclosedElements();
     assertEquals(2, enclosedElements.size());
-    enclosedElements.forEach(ee -> assertSame(METHOD, ee.getKind()));
-    System.out.println("*** modifiers: " + deprecatedElement.getModifiers());
-    enclosedElements.forEach(ee -> System.out.println("    modifiers for " + ee + ": " + ee.getModifiers()));
-
+    for (final Element ee : enclosedElements) {
+      assertSame(METHOD, ee.getKind());
+      modifiers = ee.getModifiers();
+      assertEquals(2, modifiers.size());
+      assertTrue(modifiers.contains(PUBLIC));
+      assertTrue(modifiers.contains(ABSTRACT));
+    }
   }
   
   @Test

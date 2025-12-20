@@ -23,14 +23,12 @@ import org.microbean.assign.AttributedType;
 
 import org.microbean.attributes.Attributes;
 
+import org.microbean.bean.Qualifiers;
 import org.microbean.bean.ReferencesSelector;
 
 import org.microbean.construct.Domain;
 
 import static java.util.Objects.requireNonNull;
-
-import static org.microbean.assign.Qualifiers.anyQualifiers;
-import static org.microbean.assign.Qualifiers.qualifiers;
 
 /**
  * A utility class for working with <dfn>events</dfn>.
@@ -39,9 +37,11 @@ import static org.microbean.assign.Qualifiers.qualifiers;
  */
 // Deliberately not final.
 public class Events {
-
+  
   private final EventTypes eventTypes;
 
+  private final Qualifiers qualifiers;
+  
   private final EventTypeMatcher eventTypeMatcher;
 
   private final EventQualifiersMatcher eventQualifiersMatcher;
@@ -53,6 +53,8 @@ public class Events {
    *
    * @param eventTypes an {@link EventTypes}; must not be {@code null}
    *
+   * @param qualifiers a {@link Qualifiers}; must not be {@code null}
+   *
    * @param eventTypeMatcher an {@link EventTypeMatcher}; must not be {@code null}
    *
    * @param eventQualifiersMatcher an {@link EventQualifiersMatcher}; must not be {@code null}
@@ -60,10 +62,12 @@ public class Events {
    * @exception NullPointerException if any argument is {@code null}
    */
   public Events(final EventTypes eventTypes,
+                final Qualifiers qualifiers,
                 final EventTypeMatcher eventTypeMatcher,
                 final EventQualifiersMatcher eventQualifiersMatcher) {
     super();
     this.eventTypes = requireNonNull(eventTypes, "eventTypes");
+    this.qualifiers = requireNonNull(qualifiers, "qualifiers");
     this.eventTypeMatcher = requireNonNull(eventTypeMatcher, "eventTypeMatcher");
     this.eventQualifiersMatcher = requireNonNull(eventQualifiersMatcher, "eventQualifiersMatcher");
     final Domain d = eventTypes.domain();
@@ -71,7 +75,7 @@ public class Events {
       new AttributedType(d.declaredType(d.typeElement(EventListener.class.getCanonicalName()),
                                         d.wildcardType(),
                                         d.wildcardType(null, d.javaLangObjectType())),
-                         anyQualifiers());
+                         this.qualifiers.anyQualifiers());
   }
 
   /**
@@ -103,14 +107,14 @@ public class Events {
                          final Object event,
                          final ReferencesSelector rs) {
     final EventTypeList eventTypes = this.eventTypes.eventTypes(typeArgumentSource, event);
-    final List<Attributes> eventQualifiers = qualifiers(attributes);
+    final List<Attributes> eventQualifiers = this.qualifiers.qualifiers(attributes);
     final Iterator<? extends EventListener<?, ? super Object>> i =
       rs.<EventListener<?, ? super Object>>references(this.eventListenerAttributedType).iterator();
     while (i.hasNext()) {
       final EventListener<?, ? super Object> el = i.next();
       try {
         final AttributedType slot = el.attributedType();
-        if (slot == null || !this.eventQualifiersMatcher.test(qualifiers(slot.attributes()), eventQualifiers)) {
+        if (slot == null || !this.eventQualifiersMatcher.test(this.qualifiers.qualifiers(slot.attributes()), eventQualifiers)) {
           continue;
         }
         final TypeMirror slotType = slot.type();
