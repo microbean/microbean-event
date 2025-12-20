@@ -16,11 +16,11 @@ package org.microbean.event;
 import java.util.Collection;
 
 import org.microbean.assign.Matcher;
+import org.microbean.assign.Qualifiers;
 
 import org.microbean.attributes.Attributes;
 
-import static org.microbean.assign.Qualifiers.anyQualifier;
-import static org.microbean.assign.Qualifiers.qualifiers;
+import static java.util.Objects.requireNonNull;
 
 /**
  * A {@link Matcher} encapsulating <a
@@ -35,15 +35,28 @@ public final class EventQualifiersMatcher implements Matcher<Collection<? extend
 
 
   /*
+   * Instance fields.
+   */
+
+
+  private final Qualifiers qualifiers;
+
+
+  /*
    * Constructors.
    */
 
 
   /**
    * Creates a new {@link EventQualifiersMatcher}.
+   *
+   * @param qualifiers a {@link Qualifiers}; must not be {@code null}
+   *
+   * @exception NullPointerException if {@code qualifiers} is {@code null}
    */
-  public EventQualifiersMatcher() {
+  public EventQualifiersMatcher(final Qualifiers qualifiers) {
     super();
+    this.qualifiers = requireNonNull(qualifiers, "qualifiers");
   }
 
 
@@ -76,8 +89,8 @@ public final class EventQualifiersMatcher implements Matcher<Collection<? extend
                             final Collection<? extends Attributes> payloadAttributes) {
     // "An event is delivered to an observer method if...the observer method has no event qualifiers or has a subset of
     // the event qualifiers."
-    final Collection<? extends Attributes> receiverQualifiers = qualifiers(receiverAttributes);
-    return receiverQualifiers.isEmpty() || qualifiers(payloadAttributes).containsAll(receiverQualifiers);
+    final Collection<? extends Attributes> receiverQualifiers = qualifiers.qualifiers(receiverAttributes);
+    return receiverQualifiers.isEmpty() || qualifiers.qualifiers(payloadAttributes).containsAll(receiverQualifiers);
   }
 
 }
