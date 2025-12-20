@@ -4,7 +4,7 @@
 
   <groupId>org.microbean</groupId>
   <artifactId>microbean-event</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.0.3</version>
 
   <name>microBean™ Event</name>
   <description>microBean™ Event: Utility classes for implementing simple Java events.</description>
@@ -43,7 +43,7 @@
     <connection>${scm.url}</connection>
     <developerConnection>${scm.url}</developerConnection>
     <url>https://github.com/microbean/microbean-event/</url>
-    <tag>HEAD</tag>
+    <tag>v0.0.3</tag>
   </scm>
 
   <issueManagement>
