@@ -13,7 +13,7 @@
 <div class="source-container">
 <pre><span class="source-line-no">001</span><span id="line-1">/* -*- mode: Java; c-basic-offset: 2; indent-tabs-mode: nil; coding: utf-8-unix -*-</span>
 <span class="source-line-no">002</span><span id="line-2"> *</span>
-<span class="source-line-no">003</span><span id="line-3"> * Copyright © 2025 microBean™.</span>
+<span class="source-line-no">003</span><span id="line-3"> * Copyright © 2025–2026 microBean™.</span>
 <span class="source-line-no">004</span><span id="line-4"> *</span>
 <span class="source-line-no">005</span><span id="line-5"> * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with</span>
 <span class="source-line-no">006</span><span id="line-6"> * the License. You may obtain a copy of the License at</span>
@@ -28,23 +28,23 @@
 <span class="source-line-no">015</span><span id="line-15"></span>
 <span class="source-line-no">016</span><span id="line-16">import java.util.Collection;</span>
 <span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">import org.microbean.assign.Matcher;</span>
-<span class="source-line-no">019</span><span id="line-19">import org.microbean.assign.Qualifiers;</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">import org.microbean.attributes.Attributes;</span>
+<span class="source-line-no">018</span><span id="line-18">import javax.lang.model.element.AnnotationMirror;</span>
+<span class="source-line-no">019</span><span id="line-19"></span>
+<span class="source-line-no">020</span><span id="line-20">import org.microbean.assign.Matcher;</span>
+<span class="source-line-no">021</span><span id="line-21">import org.microbean.assign.Qualifiers;</span>
 <span class="source-line-no">022</span><span id="line-22"></span>
 <span class="source-line-no">023</span><span id="line-23">import static java.util.Objects.requireNonNull;</span>
 <span class="source-line-no">024</span><span id="line-24"></span>
 <span class="source-line-no">025</span><span id="line-25">/**</span>
 <span class="source-line-no">026</span><span id="line-26"> * A {@link Matcher} encapsulating &lt;a</span>
-<span class="source-line-no">027</span><span id="line-27"> * href="https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#observer_resolution"&gt;CDI-compatible event</span>
+<span class="source-line-no">027</span><span id="line-27"> * href="https://jakarta.ee/specifications/cdi/4.1/jakarta-cdi-spec-4.1#observer_resolution"&gt;CDI-compatible event</span>
 <span class="source-line-no">028</span><span id="line-28"> * qualifier matching rules&lt;/a&gt;.</span>
 <span class="source-line-no">029</span><span id="line-29"> *</span>
 <span class="source-line-no">030</span><span id="line-30"> * @author &lt;a href="https://about.me/lairdnelson/" target="_top"&gt;Laird Nelson&lt;/a&gt;</span>
 <span class="source-line-no">031</span><span id="line-31"> *</span>
 <span class="source-line-no">032</span><span id="line-32"> * @see #test(Collection, Collection)</span>
 <span class="source-line-no">033</span><span id="line-33"> */</span>
-<span class="source-line-no">034</span><span id="line-34">public final class EventQualifiersMatcher implements Matcher&lt;Collection&lt;? extends Attributes&gt;, Collection&lt;? extends Attributes&gt;&gt; {</span>
+<span class="source-line-no">034</span><span id="line-34">public final class EventQualifiersMatcher implements Matcher&lt;Collection&lt;? extends AnnotationMirror&gt;, Collection&lt;? extends AnnotationMirror&gt;&gt; {</span>
 <span class="source-line-no">035</span><span id="line-35"></span>
 <span class="source-line-no">036</span><span id="line-36"></span>
 <span class="source-line-no">037</span><span id="line-37">  /*</span>
@@ -80,30 +80,30 @@
 <span class="source-line-no">067</span><span id="line-67"></span>
 <span class="source-line-no">068</span><span id="line-68">  /**</span>
 <span class="source-line-no">069</span><span id="line-69">   * Returns {@code true} if and only if either the {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection)</span>
-<span class="source-line-no">070</span><span id="line-70">   * qualifiers present} in {@code receiverAttributes} are {@linkplain Collection#isEmpty() empty}, or if the collection</span>
-<span class="source-line-no">071</span><span id="line-71">   * of {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code</span>
-<span class="source-line-no">072</span><span id="line-72">   * payloadAttributes} {@linkplain Collection#containsAll(Collection) contains all} of the {@linkplain</span>
-<span class="source-line-no">073</span><span id="line-73">   * org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code receiverAttributes}.</span>
+<span class="source-line-no">070</span><span id="line-70">   * qualifiers present} in {@code receiverAnnotations} are {@linkplain Collection#isEmpty() empty}, or if the</span>
+<span class="source-line-no">071</span><span id="line-71">   * collection of {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code</span>
+<span class="source-line-no">072</span><span id="line-72">   * payloadAnnotations} {@linkplain Collection#containsAll(Collection) contains all} of the {@linkplain</span>
+<span class="source-line-no">073</span><span id="line-73">   * org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code receiverAnnotations}.</span>
 <span class="source-line-no">074</span><span id="line-74">   *</span>
-<span class="source-line-no">075</span><span id="line-75">   * @param receiverAttributes a {@link Collection} of {@link Attributes} instances; must not be {@code null}</span>
+<span class="source-line-no">075</span><span id="line-75">   * @param receiverAnnotations a {@link Collection} of {@link AnnotationMirror} instances; must not be {@code null}</span>
 <span class="source-line-no">076</span><span id="line-76">   *</span>
-<span class="source-line-no">077</span><span id="line-77">   * @param payloadAttributes a {@link Collection} of {@link Attributes} instances; must not be {@code null}</span>
+<span class="source-line-no">077</span><span id="line-77">   * @param payloadAnnotations a {@link Collection} of {@link AnnotationMirror} instances; must not be {@code null}</span>
 <span class="source-line-no">078</span><span id="line-78">   *</span>
 <span class="source-line-no">079</span><span id="line-79">   * @return {@code true} if and only if either the {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection)</span>
-<span class="source-line-no">080</span><span id="line-80">   * qualifiers present} in {@code receiverAttributes} are {@linkplain Collection#isEmpty() empty}, or if the collection</span>
-<span class="source-line-no">081</span><span id="line-81">   * of {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code</span>
-<span class="source-line-no">082</span><span id="line-82">   * payloadAttributes} {@linkplain Collection#containsAll(Collection) contains all} of the {@linkplain</span>
-<span class="source-line-no">083</span><span id="line-83">   * org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code receiverAttributes}</span>
+<span class="source-line-no">080</span><span id="line-80">   * qualifiers present} in {@code receiverAnnotations} are {@linkplain Collection#isEmpty() empty}, or if the</span>
+<span class="source-line-no">081</span><span id="line-81">   * collection of {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code</span>
+<span class="source-line-no">082</span><span id="line-82">   * payloadAnnotations} {@linkplain Collection#containsAll(Collection) contains all} of the {@linkplain</span>
+<span class="source-line-no">083</span><span id="line-83">   * org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code receiverAnnotations}</span>
 <span class="source-line-no">084</span><span id="line-84">   *</span>
 <span class="source-line-no">085</span><span id="line-85">   * @exception NullPointerException if either argument is {@code null}</span>
 <span class="source-line-no">086</span><span id="line-86">   */</span>
 <span class="source-line-no">087</span><span id="line-87">  @Override // Matcher&lt;Collection&lt;? extends NamedAttributeMap&lt;?&gt;&gt;, Collection&lt;? extends NamedAttributeMap&lt;?&gt;&gt;&gt;</span>
-<span class="source-line-no">088</span><span id="line-88">  public final boolean test(final Collection&lt;? extends Attributes&gt; receiverAttributes,</span>
-<span class="source-line-no">089</span><span id="line-89">                            final Collection&lt;? extends Attributes&gt; payloadAttributes) {</span>
+<span class="source-line-no">088</span><span id="line-88">  public final boolean test(final Collection&lt;? extends AnnotationMirror&gt; receiverAnnotations,</span>
+<span class="source-line-no">089</span><span id="line-89">                            final Collection&lt;? extends AnnotationMirror&gt; payloadAnnotations) {</span>
 <span class="source-line-no">090</span><span id="line-90">    // "An event is delivered to an observer method if...the observer method has no event qualifiers or has a subset of</span>
 <span class="source-line-no">091</span><span id="line-91">    // the event qualifiers."</span>
-<span class="source-line-no">092</span><span id="line-92">    final Collection&lt;? extends Attributes&gt; receiverQualifiers = qualifiers.qualifiers(receiverAttributes);</span>
-<span class="source-line-no">093</span><span id="line-93">    return receiverQualifiers.isEmpty() || qualifiers.qualifiers(payloadAttributes).containsAll(receiverQualifiers);</span>
+<span class="source-line-no">092</span><span id="line-92">    final Collection&lt;? extends AnnotationMirror&gt; receiverQualifiers = qualifiers.qualifiers(receiverAnnotations);</span>
+<span class="source-line-no">093</span><span id="line-93">    return receiverQualifiers.isEmpty() || qualifiers.qualifiers(payloadAnnotations).containsAll(receiverQualifiers);</span>
 <span class="source-line-no">094</span><span id="line-94">  }</span>
 <span class="source-line-no">095</span><span id="line-95"></span>
 <span class="source-line-no">096</span><span id="line-96">}</span>
