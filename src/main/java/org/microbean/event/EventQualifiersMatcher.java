@@ -1,6 +1,6 @@
 /* -*- mode: Java; c-basic-offset: 2; indent-tabs-mode: nil; coding: utf-8-unix -*-
  *
- * Copyright © 2025 microBean™.
+ * Copyright © 2025–2026 microBean™.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -15,23 +15,23 @@ package org.microbean.event;
 
 import java.util.Collection;
 
+import javax.lang.model.element.AnnotationMirror;
+
 import org.microbean.assign.Matcher;
 import org.microbean.assign.Qualifiers;
-
-import org.microbean.attributes.Attributes;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * A {@link Matcher} encapsulating <a
- * href="https://jakarta.ee/specifications/cdi/4.0/jakarta-cdi-spec-4.0#observer_resolution">CDI-compatible event
+ * href="https://jakarta.ee/specifications/cdi/4.1/jakarta-cdi-spec-4.1#observer_resolution">CDI-compatible event
  * qualifier matching rules</a>.
  *
  * @author <a href="https://about.me/lairdnelson/" target="_top">Laird Nelson</a>
  *
  * @see #test(Collection, Collection)
  */
-public final class EventQualifiersMatcher implements Matcher<Collection<? extends Attributes>, Collection<? extends Attributes>> {
+public final class EventQualifiersMatcher implements Matcher<Collection<? extends AnnotationMirror>, Collection<? extends AnnotationMirror>> {
 
 
   /*
@@ -67,30 +67,30 @@ public final class EventQualifiersMatcher implements Matcher<Collection<? extend
 
   /**
    * Returns {@code true} if and only if either the {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection)
-   * qualifiers present} in {@code receiverAttributes} are {@linkplain Collection#isEmpty() empty}, or if the collection
-   * of {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code
-   * payloadAttributes} {@linkplain Collection#containsAll(Collection) contains all} of the {@linkplain
-   * org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code receiverAttributes}.
+   * qualifiers present} in {@code receiverAnnotations} are {@linkplain Collection#isEmpty() empty}, or if the
+   * collection of {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code
+   * payloadAnnotations} {@linkplain Collection#containsAll(Collection) contains all} of the {@linkplain
+   * org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code receiverAnnotations}.
    *
-   * @param receiverAttributes a {@link Collection} of {@link Attributes} instances; must not be {@code null}
+   * @param receiverAnnotations a {@link Collection} of {@link AnnotationMirror} instances; must not be {@code null}
    *
-   * @param payloadAttributes a {@link Collection} of {@link Attributes} instances; must not be {@code null}
+   * @param payloadAnnotations a {@link Collection} of {@link AnnotationMirror} instances; must not be {@code null}
    *
    * @return {@code true} if and only if either the {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection)
-   * qualifiers present} in {@code receiverAttributes} are {@linkplain Collection#isEmpty() empty}, or if the collection
-   * of {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code
-   * payloadAttributes} {@linkplain Collection#containsAll(Collection) contains all} of the {@linkplain
-   * org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code receiverAttributes}
+   * qualifiers present} in {@code receiverAnnotations} are {@linkplain Collection#isEmpty() empty}, or if the
+   * collection of {@linkplain org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code
+   * payloadAnnotations} {@linkplain Collection#containsAll(Collection) contains all} of the {@linkplain
+   * org.microbean.assign.Qualifiers#qualifiers(Collection) qualifiers present} in {@code receiverAnnotations}
    *
    * @exception NullPointerException if either argument is {@code null}
    */
   @Override // Matcher<Collection<? extends NamedAttributeMap<?>>, Collection<? extends NamedAttributeMap<?>>>
-  public final boolean test(final Collection<? extends Attributes> receiverAttributes,
-                            final Collection<? extends Attributes> payloadAttributes) {
+  public final boolean test(final Collection<? extends AnnotationMirror> receiverAnnotations,
+                            final Collection<? extends AnnotationMirror> payloadAnnotations) {
     // "An event is delivered to an observer method if...the observer method has no event qualifiers or has a subset of
     // the event qualifiers."
-    final Collection<? extends Attributes> receiverQualifiers = qualifiers.qualifiers(receiverAttributes);
-    return receiverQualifiers.isEmpty() || qualifiers.qualifiers(payloadAttributes).containsAll(receiverQualifiers);
+    final Collection<? extends AnnotationMirror> receiverQualifiers = qualifiers.qualifiers(receiverAnnotations);
+    return receiverQualifiers.isEmpty() || qualifiers.qualifiers(payloadAnnotations).containsAll(receiverQualifiers);
   }
 
 }

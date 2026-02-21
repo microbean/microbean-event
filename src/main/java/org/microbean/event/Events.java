@@ -1,6 +1,6 @@
 /* -*- mode: Java; c-basic-offset: 2; indent-tabs-mode: nil; coding: utf-8-unix -*-
  *
- * Copyright © 2025 microBean™.
+ * Copyright © 2025–2026 microBean™.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -16,17 +16,19 @@ package org.microbean.event;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+
 import javax.lang.model.type.TypeMirror;
 
-import org.microbean.assign.AttributedElement;
-import org.microbean.assign.AttributedType;
-
-import org.microbean.attributes.Attributes;
+import org.microbean.assign.Annotated;
 
 import org.microbean.bean.Qualifiers;
 import org.microbean.bean.ReferencesSelector;
 
 import org.microbean.construct.Domain;
+
+import org.microbean.construct.type.UniversalType;
 
 import static java.util.Objects.requireNonNull;
 
@@ -37,61 +39,64 @@ import static java.util.Objects.requireNonNull;
  */
 // Deliberately not final.
 public class Events {
-  
+
   private final EventTypes eventTypes;
 
-  private final Qualifiers qualifiers;
-  
+  private final org.microbean.assign.Qualifiers aq;
+
   private final EventTypeMatcher eventTypeMatcher;
 
   private final EventQualifiersMatcher eventQualifiersMatcher;
 
-  private final AttributedType eventListenerAttributedType;
+  private final Annotated<TypeMirror> eventListenerAnnotated;
 
   /**
    * Creates a new {@link Events}.
    *
-   * @param eventTypes an {@link EventTypes}; must not be {@code null}
+   * @param domain a non-{@code null} Domain
    *
-   * @param qualifiers a {@link Qualifiers}; must not be {@code null}
+   * @param eventTypes a non-{@code null} {@link EventTypes}
    *
-   * @param eventTypeMatcher an {@link EventTypeMatcher}; must not be {@code null}
+   * @param aq a non-{@code null} {@link org.microbean.assign.Qualifiers}
    *
-   * @param eventQualifiersMatcher an {@link EventQualifiersMatcher}; must not be {@code null}
+   * @param bq a non-{@code null} {@link Qualifiers}
+   *
+   * @param eventTypeMatcher a non-{@code null} {@link EventTypeMatcher}
+   *
+   * @param eventQualifiersMatcher a non-{@code null} {@link EventQualifiersMatcher}
    *
    * @exception NullPointerException if any argument is {@code null}
    */
-  public Events(final EventTypes eventTypes,
-                final Qualifiers qualifiers,
+  public Events(final Domain domain,
+                final EventTypes eventTypes,
+                final org.microbean.assign.Qualifiers aq,
+                final Qualifiers bq,
                 final EventTypeMatcher eventTypeMatcher,
                 final EventQualifiersMatcher eventQualifiersMatcher) {
     super();
     this.eventTypes = requireNonNull(eventTypes, "eventTypes");
-    this.qualifiers = requireNonNull(qualifiers, "qualifiers");
+    this.aq = requireNonNull(aq, "aq");
     this.eventTypeMatcher = requireNonNull(eventTypeMatcher, "eventTypeMatcher");
     this.eventQualifiersMatcher = requireNonNull(eventQualifiersMatcher, "eventQualifiersMatcher");
-    final Domain d = eventTypes.domain();
-    this.eventListenerAttributedType =
-      new AttributedType(d.declaredType(d.typeElement(EventListener.class.getCanonicalName()),
-                                        d.wildcardType(),
-                                        d.wildcardType(null, d.javaLangObjectType())),
-                         this.qualifiers.anyQualifiers());
+    this.eventListenerAnnotated =
+      Annotated.of(new UniversalType(bq.anyQualifiers(),
+                                     domain.declaredType(domain.typeElement(EventListener.class.getCanonicalName()),
+                                                         domain.wildcardType(),
+                                                         domain.wildcardType()),
+                                     domain));
   }
 
   /**
    * Delivers ("fires") the supplied {@code event} to <dfn>suitable</dfn> {@link EventListener}s.
    *
-   * <p>A suitable {@link EventListener} is one whose {@link EventListener#attributedType()} method returns an {@link
-   * AttributedType}
-   *
    * @param typeArgumentSource handwave here about the specified type and type argument substitution
    *
-   * @param attributes a {@link List} of {@link Attributes} qualifying the event; must not be {@code null}
+   * @param annotations a {@link List} of {@link AnnotationMirror}s qualifying the event; must not be {@code null}
    *
    * @param event the event; must not be {@code null}
    *
-   * @param rs a {@link ReferencesSelector}; used to find {@link EventListener EventListener&lt;?, ?&gt;} references; must not be
-   * {@code null}
+   * @param rs a {@link ReferencesSelector}; used to find {@link EventListener EventListener&lt;?, ?&gt;} references;
+   * must not be {@code null}
    *
    * @exception NullPointerException if any argument is {@code null}
    *
@@ -103,21 +108,22 @@ public class Events {
    */
   // Deliberately final.
   public final void fire(final TypeMirror typeArgumentSource,
-                         final List<Attributes> attributes,
+                         final List<AnnotationMirror> annotations,
                          final Object event,
                          final ReferencesSelector rs) {
     final EventTypeList eventTypes = this.eventTypes.eventTypes(typeArgumentSource, event);
-    final List<Attributes> eventQualifiers = this.qualifiers.qualifiers(attributes);
+    final List<AnnotationMirror> eventQualifiers = this.aq.qualifiers(annotations);
     final Iterator<? extends EventListener<?, ? super Object>> i =
-      rs.<EventListener<?, ? super Object>>references(this.eventListenerAttributedType).iterator();
+      rs.<EventListener<?, ? super Object>>references(this.eventListenerAnnotated).iterator();
     while (i.hasNext()) {
       final EventListener<?, ? super Object> el = i.next();
       try {
-        final AttributedType slot = el.attributedType();
-        if (slot == null || !this.eventQualifiersMatcher.test(this.qualifiers.qualifiers(slot.attributes()), eventQualifiers)) {
+        final Annotated<? extends Element> slot = el.eventDependency();
+        if (slot == null ||
+            !this.eventQualifiersMatcher.test(this.aq.qualifiers(slot.annotations()), eventQualifiers)) {
           continue;
         }
-        final TypeMirror slotType = slot.type();
+        final TypeMirror slotType = slot.annotated().asType();
         for (final TypeMirror eventType : eventTypes) {
           if (this.eventTypeMatcher.test(slotType, eventType)) {
             // This level of indirection permits asynchronous notification.
@@ -144,8 +150,8 @@ public class Events {
    * <p>Overrides of this method must not call the {@link #fire(TypeMirror, List, Object, ReferencesSelector)} method,
    * or an infinite loop may result.</p>
    *
-   * @param el an {@link EventListener} that has been determined to be suitable for the supplied {@code event}; must not
-   * be {@code null}
+   * @param el an {@link EventListener} that has been determined to be suitable for the supplied {@code event}; must
+   * not be {@code null}
    *
    * @param event the event to deliver; must not be {@code null}
    *
