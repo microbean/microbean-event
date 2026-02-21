@@ -2,6 +2,8 @@
 
 [![Maven Central](https://img.shields.io/maven-central/v/org.microbean/microbean-event.svg?label=Maven%20Central)](https://search.maven.org/artifact/org.microbean/microbean-event)
 
+![0% AI](https://img.shields.io/badge/%F0%9F%A4%96_AI-0%25_%F0%9F%8C%BC-brightgreen)
+
 The microBean™ Event project provides classes and interfaces assisting with implementing simple Java events.
 
 # Status
@@ -27,7 +29,7 @@ dependency:
   <groupId>org.microbean</groupId>
   <artifactId>microbean-event</artifactId>
   <!-- Always check https://search.maven.org/artifact/org.microbean/microbean-event for up-to-date available versions. -->
-  <version>0.0.3</version>
+  <version>0.0.4</version>
 </dependency>
 ```
 
